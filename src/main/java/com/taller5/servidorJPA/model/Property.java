@@ -1,4 +1,4 @@
-package com.taller5.ServidorJPA.model;
+package com.taller5.servidorJPA.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

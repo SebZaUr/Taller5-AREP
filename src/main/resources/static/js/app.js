@@ -1,79 +1,173 @@
-const form = document.getElementById('propertyForm');
-const propertyList = document.getElementById('propertyList');
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('propertyForm');
+    const searchForm = document.getElementById('searchProperty');
+    const deleteButton =document.getElementById('deleteProperty');
+    const updateButton =document.getElementById('updateProperty');
+    const url = 'http://localhost:8080/v1/arep/property';
+    loadProperties();
+    form.addEventListener('submit', addProperty);
+    searchForm.addEventListener('submit', getProperty);
+    deleteButton.addEventListener('click', deleteProperty);
+    updateButton.addEventListener('click', updateProperty);
+    listProperties = [];
 
-form.addEventListener('submit', async (event) => {
-    event.preventDefault();
+    async function addProperty(event) {
+        event.preventDefault();
 
-    const address = document.getElementById('address').value;
-    const price = document.getElementById('price').value;
-    const size = document.getElementById('size').value;
-    const description = document.getElementById('description').value;
+        const address = document.getElementById('address').value;
+        const price = document.getElementById('price').value;
+        const size = document.getElementById('size').value;
+        const description = document.getElementById('description').value;
+        const property = { address, price, size, description };
 
-    const property = { address, price, size, description };
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(property),
+            });
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+            const result = await response.json();
+            console.log('Server response:', result);
+            form.reset();
+            loadProperties();
+            return result;
+        } catch (error) {
+            alert('ERROR: '+ error);
+        }
+    }
 
-    // Send POST request to add property
-    await fetch('http://your-backend-url/properties', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(property),
-    });
+    async function loadProperties(){
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+            const properties = await response.json();
+            createTable(properties,0,properties.length);
+        } catch (error) {
+            alert("ERROR: "+ error);
+            console.error('ERROR:'+ error);
+        }
+    }
 
-    form.reset();
-    loadProperties(); // Refresh the property list
+    async function getProperty(address){
+            try {
+                const response = await fetch(`${url}/${id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status}`);
+                }
+                const properties = await response.json();
+                createTable(properties,0,properties.length);
+            } catch (error) {
+                alert("ERROR: "+ error);
+            }
+        }
+
+
+    async function updateProperty(address) {
+        try {
+            const newPrice = prompt("Nuevo Precio:");
+            const newSize = prompt("Nuevo Tamaño:");
+            const newDescription = prompt("Nueva descripcion:");
+
+            if (newPrice && newSize && newDescription) {
+                const updatedProperty = {
+                    address: address,
+                    price: newPrice,
+                    size: newSize,
+                    description: newDescription
+                };
+
+                const response = await fetch(`${url}/${address}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(updatedProperty),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status}`);
+                }
+
+                const result = await response.json();
+                console.log('Server response:', result);
+                loadProperties();
+                return result;
+            } else {
+                alert("Todos los campos son obligatorios.");
+            }
+        } catch (error) {
+            alert("ERROR: " + error);
+        }
+    }
+
+    async function deleteProperty(id) {
+        try {
+            if (confirm("¿Estás seguro de que deseas borrar esta propiedad?")) {
+                const response = await fetch(`${url}/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (!response.ok) {
+                    alert("ERROR: " + response.status);
+                    throw new Error(`Error: ${response.status}`);
+                }
+                loadProperties();
+            }
+        } catch (error) {
+            alert("ERROR: " + error);
+        }
+    }
+
+    function createTable(courseList, start, limit) {
+        let table = document.getElementById("listTable").getElementsByTagName('tbody')[0];
+        table.innerHTML = ''; // Limpiar la tabla
+        for (let i = start; i < limit; i++) {
+            let course = courseList[i];
+            let row = table.insertRow();
+            let cell1 = row.insertCell(0);
+            let cell2 = row.insertCell(1);
+            let cell3 = row.insertCell(2);
+            let cell4 = row.insertCell(3);
+            let cell5 = row.insertCell(4);
+            cell1.innerHTML = course.address;
+            cell2.innerHTML = course.price;
+            cell3.innerHTML = course.size;
+            cell4.innerHTML = course.description;
+            cell5.innerHTML = `
+                <div class="mt-3">
+                    <button class="deleteProperty btn btn-danger">Eliminar</button>
+                    <button class="updateProperty btn btn-warning">Actualizar</button>
+                </div>
+            `;
+            let deleteButton = cell5.querySelector('.deleteProperty');
+            let updateButton = cell5.querySelector('.updateProperty');
+            deleteButton.addEventListener('click', function() {
+                deleteProperty(course.id);
+            });
+
+            updateButton.addEventListener('click', function() {
+                console.log('Update:', course.address);
+                updateProperty(course.address);
+            });
+        }
+    }
 });
-
-// Function to load properties
-async function loadProperties() {
-    const response = await fetch('http://your-backend-url/properties');
-    const properties = await response.json();
-    displayProperties(properties);
-}
-
-// Function to display properties
-function displayProperties(properties) {
-    propertyList.innerHTML = '';
-    properties.forEach(property => {
-        const div = document.createElement('div');
-        div.className = 'property-item';
-        div.innerHTML = `
-            <strong>${property.address}</strong><br>
-            Price: $${property.price} | Size: ${property.size} sq ft<br>
-            Description: ${property.description}<br>
-            <button onclick="updateProperty(${property.id})">Update</button>
-            <button onclick="deleteProperty(${property.id})">Delete</button>
-        `;
-        propertyList.appendChild(div);
-    });
-}
-
-// Update property function
-async function updateProperty(id) {
-    const updatedProperty = prompt('Enter new address, price, size, description (comma separated):').split(',');
-    if (updatedProperty.length < 4) return alert('Invalid input');
-
-    const [address, price, size, description] = updatedProperty;
-
-    await fetch(`http://your-backend-url/properties/${id}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ address, price, size, description }),
-    });
-
-    loadProperties(); // Refresh the property list
-}
-
-// Delete property function
-async function deleteProperty(id) {
-    await fetch(`http://your-backend-url/properties/${id}`, {
-        method: 'DELETE',
-    });
-
-    loadProperties(); // Refresh the property list
-}
-
-// Load properties on page load
-window.onload = loadProperties;

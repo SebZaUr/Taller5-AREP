@@ -1,4 +1,4 @@
-package com.taller5.ServidorJPA;
+package com.taller5.servidorJPA;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

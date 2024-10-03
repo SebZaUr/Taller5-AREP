@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  app:
+    build:
+        context: .
+        dockerfile: Dockerfile
+    environment:
+      - DB_URL=jdbc:mysql://44.204.192.243:3306/arep_taller
+      - DB_USERNAME=SebZaUr
+      - DB_PASSWORD=Arep2024!@#
+    ports:
+      - "80:8080"
