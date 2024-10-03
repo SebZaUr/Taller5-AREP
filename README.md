@@ -120,7 +120,7 @@ Las clases principales del sistema incluyen:
 - **deletePropertyReturnsNotFound**: Verifica que el método `deleteProperty` del controlador devuelva un estado HTTP `NOT_FOUND` y un mensaje de error cuando ocurre una excepción al eliminar una propiedad.
 
 ## Ejecución de las pruebas
-![Pruebas](./src/resources/img/test.png)
+![Pruebas](./src/main/resources/img/test.png)
 
 ---
 
