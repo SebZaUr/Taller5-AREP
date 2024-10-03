@@ -128,7 +128,7 @@ Las clases principales del sistema incluyen:
 
 ___Agregar una propiedad___
 ![Add](./src/main/resources/img/add.png)
-![Add2](./src/resources/img/add2.png)
+![Add2](./src/main/resources/img/add2.png)
 
 ___Actualizar una propiedad___
 ![Update](./src/main/resources/img/update.png)
