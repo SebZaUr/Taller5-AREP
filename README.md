@@ -126,20 +126,19 @@ Las clases principales del sistema incluyen:
 
 ## Demostaación de la Aplicación
 
-![Index](./src/resources/img/index.png)
 ___Agregar una propiedad___
-![Add](./src/resources/img/add.png)
+![Add](./src/main/resources/img/add.png)
 ![Add2](./src/resources/img/add2.png)
 
 ___Actualizar una propiedad___
-![Update](./src/resources/img/update.png)
-![Update2](./src/resources/img/update2.png)
-![Update3](./src/resources/img/update3.png)
-![Update4](./src/resources/img/update4.png)
+![Update](./src/main/resources/img/update.png)
+![Update2](./src/main/resources/img/update2.png)
+![Update3](./src/main/resources/img/update3.png)
+![Update4](./src/main/resources/img/update4.png)
 
 ___Eliminar una propiedad___
-![Delete](./src/resources/img/delete.png)
-![Delete2](./src/resources/img/delete2.png)
+![Delete](./src/main/resources/img/delete.png)
+![Delete2](./src/main/resources/img/delete2.png)
 
 ---
 
